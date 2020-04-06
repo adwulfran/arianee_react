@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import "./App.css";
-import { Arianee } from "@arianee/arianeejs";
-
+import TabsCard from "./components/wallet/create-wallet/tabs-card";
 // router https://gist.github.com/VesperDev/e233115469a6c53bb96443f66385aa22
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
@@ -23,6 +22,10 @@ import {
 const { Header, Sider, Content } = Layout;
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.containerRef = React.createRef();
+  }
   state = {
     collapsed: false
   };
@@ -38,12 +41,11 @@ class App extends Component {
         <Layout>
           <Sider trigger={null} collapsible collapsed={this.state.collapsed}>
             <div className="logo" />
-            <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
+            <Menu theme="dark" mode="inline" /*defaultSelectedKeys={["1"]}*/>
               <Menu.Item key="1">
                 <UserOutlined />
                 <span> Wallet</span>
                 <Link to="/wallet" />
-                
               </Menu.Item>
               <Menu.Item key="2">
                 <VideoCameraOutlined />
@@ -76,6 +78,7 @@ class App extends Component {
             >
               <Route exact path="/wallet" component={WalletComponent} />
               <Route exact path="/certificat" component={CertificatComponent} />
+              <Route exact path="/create-wallet" component={TabsCard} />
             </Content>
           </Layout>
         </Layout>
