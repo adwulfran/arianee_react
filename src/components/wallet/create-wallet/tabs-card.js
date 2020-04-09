@@ -8,16 +8,20 @@ export default class TabsCard extends React.Component {
     this.state = {
       key: "By Mnemonic Phrase"
     };
+  }
+  componentWillMount() {
     const $wallet = new Arianee().init().then(
       arianee => arianee.fromRandomKey()
     );
 
     $wallet.then(async w => {
       this.setState({
-        mnemonic: w.mnemnonic
+        mnemonic: w.mnemnonic,
+        private_key : w.privateKey
       });
     });
   }
+
 
   onTabChange = (key, type) => {
     console.log(key, type);
@@ -38,7 +42,7 @@ export default class TabsCard extends React.Component {
 
     this.contentList = {
       "By Mnemonic Phrase": <p>{this.state.mnemonic}</p>,
-      "By Private Key": <p>Your Private Key</p>
+      "By Private Key": <p>{this.state.private_key}</p>
     };
     return (
       <div>
