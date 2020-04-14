@@ -2,11 +2,20 @@ import React, { Component } from "react";
 import "./App.css";
 import TabsCard from "./components/wallet/create-wallet/tabs-card";
 // router https://gist.github.com/VesperDev/e233115469a6c53bb96443f66385aa22
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Link,
+  Redirect
+} from "react-router-dom";
 
 // components
 import WalletComponent from "./components/wallet/wallet";
 import CertificatComponent from "./components/certificat/certificat";
+import InterfaceComponent from "./components/interface/interface";
+
+// auth guard service
+import {fakeAuth} from "./components/wallet/modal/mnemonic-modal"; 
 
 // ant ui
 import { Layout, Menu } from "antd";
@@ -16,7 +25,7 @@ import {
   MenuFoldOutlined,
   UserOutlined,
   VideoCameraOutlined,
-  UploadOutlined
+  UploadOutlined,
 } from "@ant-design/icons";
 
 const { Header, Sider, Content } = Layout;
@@ -27,12 +36,12 @@ class App extends Component {
     this.containerRef = React.createRef();
   }
   state = {
-    collapsed: false
+    collapsed: false,
   };
 
   toggle = () => {
     this.setState({
-      collapsed: !this.state.collapsed
+      collapsed: !this.state.collapsed,
     });
   };
   render() {
@@ -64,7 +73,7 @@ class App extends Component {
                 this.state.collapsed ? MenuUnfoldOutlined : MenuFoldOutlined,
                 {
                   className: "trigger",
-                  onClick: this.toggle
+                  onClick: this.toggle,
                 }
               )}
             </Header>
@@ -73,12 +82,16 @@ class App extends Component {
               style={{
                 margin: "24px 16px",
                 padding: 24,
-                minHeight: 280
+                minHeight: 280,
               }}
             >
               <Route exact path="/wallet" component={WalletComponent} />
               <Route exact path="/certificat" component={CertificatComponent} />
               <Route exact path="/create-wallet" component={TabsCard} />
+              
+              <PrivateRoute path="/interface">
+                <InterfaceComponent />
+              </PrivateRoute>
             </Content>
           </Layout>
         </Layout>
@@ -88,3 +101,29 @@ class App extends Component {
 }
 
 export default App;
+
+
+// A wrapper for <Route> that redirects to the login
+// screen if you're not yet authenticated.
+function PrivateRoute({ children, ...rest }) {
+  return (
+    <Route
+      {...rest}
+      render={({ location }) =>
+        fakeAuth.isAuthenticated ? (
+          children
+        ) : (
+          <Redirect
+            to={{
+              pathname: "/wallet",
+              state: { from: location },
+            }}
+          />
+        )
+      }
+    />
+  );
+}
+
+
+
