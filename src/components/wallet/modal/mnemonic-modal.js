@@ -1,11 +1,20 @@
 import React, { useState } from "react";
-import ReactDOM from "react-dom";
 import { Form, Row, Col, Input, Button } from "antd";
 import { DownOutlined, UpOutlined } from "@ant-design/icons";
 import { Arianee } from "@arianee/arianeejs";
 import "./mnemonic-modal.css";
+import { useHistory, useLocation } from "react-router-dom";
 
 const MnemonicModal = () => {
+  let history = useHistory();
+  let location = useLocation();
+
+  let { from } = location.state || { from: { pathname: "/interface" } };
+  let login = () => {
+    fakeAuth.authenticate(() => {
+      history.replace(from);
+    });
+  };
   const [expand, setExpand] = useState(true);
   const [form] = Form.useForm();
 
@@ -42,13 +51,11 @@ const MnemonicModal = () => {
       for (var i = 0; i < 12; ++i) {
         mnemonicInput = mnemonicInput + values["field-" + i] + " ";
       }
-      //console.log('fuckb '+mnemonicInput.length)
-      var k = Math.abs(mnemonicInput.length-1);
-      var l = mnemonicInput.length;
-      console.log(mnemonicInput.slice(0,k))
-      return (mnemonicInput.slice(0,k))
+
+      var k = Math.abs(mnemonicInput.length - 1);
+      console.log(mnemonicInput.slice(0, k));
+      return mnemonicInput.slice(0, k);
     }
-    console.log(createVariables());
 
     const $wallet = new Arianee()
       .init()
@@ -57,6 +64,7 @@ const MnemonicModal = () => {
     $wallet.then(async (w) => {
       const b = await w.publicKey;
       console.log("b is " + b);
+      await login();
       //this.setState({
       //  mnemonic: w.mnemnonic,
       // private_key : w.privateKey
@@ -91,7 +99,7 @@ const MnemonicModal = () => {
               setExpand(!expand);
             }}
           >
-            {expand ? <UpOutlined /> : <DownOutlined />} Collapse
+            {/*{expand ? <UpOutlined /> : <DownOutlined />} Collapse*/}
           </a>
         </Col>
       </Row>
@@ -100,10 +108,15 @@ const MnemonicModal = () => {
 };
 
 export default MnemonicModal;
-ReactDOM.render(
-  <div>
-    <MnemonicModal />
-    <div className="search-result-list">Search Result List</div>
-  </div>,
-  document.getElementById("root")
-);
+
+export const fakeAuth  = {
+  isAuthenticated: false,
+  authenticate(cb) {
+    fakeAuth.isAuthenticated = true;
+    setTimeout(cb, 100); // fake async
+  },
+  signout(cb) {
+    fakeAuth.isAuthenticated = false;
+    setTimeout(cb, 100);
+  },
+};
