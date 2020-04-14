@@ -15,7 +15,19 @@ export default class WalletComponent extends React.Component {
       visible: true,
     });
   };
+  handleOk = e => {
+    console.log(e);
+    this.setState({
+      visible: false,
+    });
+  };
 
+  handleCancel = e => {
+    console.log(e);
+    this.setState({
+      visible: false,
+    });
+  };
   render() {
     return (
       <div>
@@ -35,6 +47,8 @@ export default class WalletComponent extends React.Component {
                   <Modal
                     title="Access by Mnemonic Phrase"
                     visible={this.state.visible}
+                    onOk={this.handleOk}
+                    onCancel={this.handleCancel}
                     cancelButtonProps={{ style: { display: "none" } }}
                     okButtonProps={{ style: { display: "none" } }}
                   >
