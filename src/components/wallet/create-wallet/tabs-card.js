@@ -49,7 +49,6 @@ export default class TabsCard extends React.Component {
         <Card
           style={{ width: "100%" }}
           title="Get a New Wallet"
-          extra={<a href="#">More</a>}
           tabList={this.tabList}
           activeTabKey={this.state.key}
           onTabChange={key => {
