@@ -5,7 +5,7 @@ import "./mnemonic-modal.css";
 import { useHistory, useLocation } from "react-router-dom";
 import {fakeAuth} from "../../../services/canActivate"; 
 
-const MnemonicModal = () => {
+const PrivateKeyModal = () => {
   let history = useHistory();
   let location = useLocation();
 
@@ -13,7 +13,7 @@ const MnemonicModal = () => {
 
   const getFields = () => {
     //const count = expand ? 10 : 6;
-    const count = 12;
+    const count = 1 ;
     const children = [];
 
     for (let i = 0; i < count; i++) {
@@ -39,27 +39,22 @@ const MnemonicModal = () => {
   };
 
   const onFinish = (values) => {
-    function createVariables() {
-      var mnemonicInput = "";
-      for (var i = 0; i < 12; ++i) {
-        mnemonicInput = mnemonicInput + values["field-" + i] + " ";
-      }
-
-      var k = Math.abs(mnemonicInput.length - 1);
-      console.log(mnemonicInput.slice(0, k));
-      return mnemonicInput.slice(0, k);
+    function privateKey() {
+      var privateKeyInput ="";
+      privateKeyInput = values["field-0"]
+      return privateKeyInput;
     }
 
     const $wallet = new Arianee()
       .init()
-      .then((arianee) => arianee.fromMnemonic(createVariables()));
+      .then((arianee) => arianee.fromPrivateKey(privateKey()));
 
     $wallet.then(async (w) => {
       
       const b = await w.publicKey;
       console.log("b is " + b);
       let { from } = location.state || {
-        from: { pathname: "/interface/" + b },
+        from: { pathname: "/interface/fromPK" + b },
       };
       let login = () => {
         fakeAuth.authenticate(() => {
@@ -100,6 +95,6 @@ const MnemonicModal = () => {
   );
 };
 
-export default MnemonicModal;
+export default PrivateKeyModal;
 
 

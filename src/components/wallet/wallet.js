@@ -1,31 +1,50 @@
 import React from "react";
-import { Arianee } from "@arianee/arianeejs";
 import "./wallet.css";
 import { Card, Col, Row } from "antd";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 // modal component to access wallet
 import { Modal, Button } from "antd";
 import MnemonicModal from "./modal/mnemonic-modal";
+import PrivateKeyModal from "./modal/privatekey-modal";
+
 
 export default class WalletComponent extends React.Component {
-  state = { visible: false };
+  state = { mnemonic_visible: false, privatekey_visible : false };
 
-  showModal = () => {
+  showMnemonicModal = () => {
     this.setState({
-      visible: true,
+      mnemonic_visible: true,
     });
   };
-  handleOk = e => {
+  showModalPrivateKey = () => {
+    this.setState({
+      privatekey_visible: true,
+    });
+  };
+  handleOkMnemonic = e => {
     console.log(e);
     this.setState({
-      visible: false,
+      mnemonic_visible: false,
+    });
+  };
+  handleOkPrivateKey = e => {
+    console.log(e);
+    this.setState({
+      privatekey_visible: false,
     });
   };
 
-  handleCancel = e => {
+  handleCancelMnemonic = e => {
     console.log(e);
     this.setState({
-      visible: false,
+      mnemonic_visible: false,
+    });
+  };
+
+  handleCancelPrivateKey = e => {
+    console.log(e);
+    this.setState({
+      privatekey_visible: false,
     });
   };
   render() {
@@ -41,14 +60,14 @@ export default class WalletComponent extends React.Component {
             <Col span={12}>
               <Card title="Mnemonic" bordered={true}>
                 <div>
-                  <Button type="primary" onClick={this.showModal}>
+                  <Button type="primary" onClick={this.showMnemonicModal}>
                     Access by Mnemonic Phrase
                   </Button>
                   <Modal
                     title="Access by Mnemonic Phrase"
-                    visible={this.state.visible}
-                    onOk={this.handleOk}
-                    onCancel={this.handleCancel}
+                    visible={this.state.mnemonic_visible}
+                    onOk={this.handleOkMnemonic}
+                    onCancel={this.handleCancelMnemonic}
                     cancelButtonProps={{ style: { display: "none" } }}
                     okButtonProps={{ style: { display: "none" } }}
                   >
@@ -59,7 +78,21 @@ export default class WalletComponent extends React.Component {
             </Col>
             <Col span={12}>
               <Card title="Private Key" bordered={true}>
-                Access wallet with Private Key
+              <div>
+                  <Button type="primary" onClick={this.showModalPrivateKey}>
+                  Access wallet with Private Key
+                  </Button>
+                  <Modal
+                    title="Access by PK"
+                    visible={this.state.privatekey_visible}
+                    onOk={this.handleOkPrivateKey}
+                     onCancel={this.handleCancelPrivateKey}
+                    cancelButtonProps={{ style: { display: "none" } }}
+                    okButtonProps={{ style: { display: "none" } }}
+                  >
+                    <PrivateKeyModal></PrivateKeyModal>
+                  </Modal>
+                </div>
               </Card>
             </Col>
           </Row>
