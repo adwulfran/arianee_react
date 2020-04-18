@@ -6,7 +6,8 @@ import {
   BrowserRouter as Router,
   Route,
   Link,
-  Redirect
+  Redirect,
+  useParams
 } from "react-router-dom";
 
 // components
@@ -15,7 +16,7 @@ import CertificatComponent from "./components/certificat/certificat";
 import InterfaceComponent from "./components/interface/interface";
 
 // auth guard service
-import {fakeAuth} from "./components/wallet/modal/mnemonic-modal"; 
+import {fakeAuth} from "./services/canActivate"; 
 
 // ant ui
 import { Layout, Menu } from "antd";
@@ -47,7 +48,7 @@ class App extends Component {
   render() {
     return (
       <Router>
-        <Layout>
+        <Layout style={{height:"100vh"}}>
           <Sider trigger={null} collapsible collapsed={this.state.collapsed}>
             <div className="logo" />
             <Menu theme="dark" mode="inline" /*defaultSelectedKeys={["1"]}*/>
@@ -88,9 +89,7 @@ class App extends Component {
               <Route exact path="/wallet" component={WalletComponent} />
               <Route exact path="/certificat" component={CertificatComponent} />
               <Route exact path="/create-wallet" component={TabsCard} />
-              
-              <PrivateRoute path="/interface">
-                <InterfaceComponent />
+              <PrivateRoute path="/interface/:id" children={<InterfaceComponent />}>
               </PrivateRoute>
             </Content>
           </Layout>
